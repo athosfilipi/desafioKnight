@@ -7,7 +7,7 @@ import { Knight, KnightDocument } from './entities/knight.Schema';
 export class KnightsService {
   constructor(
     @InjectModel(Knight.name) private readonly knightModel: Model<KnightDocument>,
-  ) {}
+  ) { }
 
   async create(knight: Knight): Promise<Knight> {
     const createdKnight = new this.knightModel(knight);
@@ -15,7 +15,8 @@ export class KnightsService {
   }
 
   async findAll(): Promise<Knight[]> {
-    return this.knightModel.find().exec();
+    const query = { 'attributes.hero': { $ne: true } };
+    return this.knightModel.find(query).exec();
   }
 
   async findByHero(): Promise<Knight[]> {
@@ -26,13 +27,31 @@ export class KnightsService {
     return this.knightModel.findById(id).exec();
   }
 
-  async update(id: string, knight: Knight): Promise<Knight> {
+  async update(id: string,  knight: Knight): Promise<Knight> {
+    return this.knightModel.findByIdAndUpdate(id, knight, { new: true }).exec();
+  }
+  async updateNickname(id: string, nickname: 'string'): Promise<Knight> {
+    if (!Boolean(nickname)) return;
+    const validate = [
+      Boolean(nickname),
+      nickname.length >= 3
+    ];
+    const isValid = validate.every(item => Boolean(item));
+    if (!isValid) return;
+    const knight = await this.knightModel.findById(id).exec();
+    knight.nickname = nickname;
     return this.knightModel.findByIdAndUpdate(id, knight, { new: true }).exec();
   }
 
-  async delete(id: string): Promise<Knight> {
-    const deletedKnight = await this.knightModel.findByIdAndDelete(id).exec();
-    return deletedKnight;
+  async delete(knightId: string): Promise<Knight> {
+    // const deletedKnight = await this.knightModel.findByIdAndDelete(id).exec();
+    // return deletedKnight;
+
+    const knight = await this.knightModel.findById(knightId).exec();
+    knight.attributes.hero = true;
+
+
+    return this.update(knightId, knight);
   }
 
   async addWeapon(knightId: string, weapon: { name: string, mod: number, attr: string, equipped: boolean }): Promise<Knight> {
@@ -52,7 +71,7 @@ export class KnightsService {
     knight.weapons.forEach((weapon, index) => {
       weapon.equipped = index === weaponIndex;
     });
-    return knight.save();
+    return this.update(knightId, knight);
   }
 
   async calculateAttack(knightId: string): Promise<number> {

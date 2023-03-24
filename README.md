@@ -40,6 +40,12 @@ $ npm install
 ```
 ## Running the app
 
+
+```bash
+# start mongoDB with docker
+$ docker compose up
+```
+
 ```bash
 # development
 $ npm run start
@@ -50,6 +56,43 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+## API Documentation
+```bash
+# Enjoy the swagger too
+► http://{host}:{port}/api/v1/swagger
+```
+## Utils
+```bash
+# you will find a hero list in:
+► src\utils\heroList.md
+```
+### json body exemples:
+``` bash
+# Add a Knight
+► src\utils\addKnights.md
+```
+
+``` bash
+# Add weapon
+► src\utils\addWeapon.md
+```
+
+``` bash
+# Remove the weapon
+► src\utils\removeWeapon.md
+```
+
+``` bash
+# Set Equipped Weapon
+► src\utils\setEquippedWeapon.md
+```
+
+``` bash
+# Change Nickname
+► src\utils\setEquippedWeapon.md
+```
+
 ## License
+```bash
 
 Nest is [MIT licensed](LICENSE).

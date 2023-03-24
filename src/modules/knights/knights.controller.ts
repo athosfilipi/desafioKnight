@@ -31,15 +31,15 @@ export class KnightsController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() knight: Knight): Promise<Knight> {
-    return this.knightService.update(id, knight);
+  async update(@Param('id') id: string, @Body() body): Promise<Knight> {
+    if(!Boolean(body.nickname)) return;
+    return this.knightService.updateNickname(id, body.nickname); 
   }
 
   @Patch('setEquippedWeapon/:knightId')
   async setEquippedWeapon(@Param('knightId') knightId: string, @Body() body: { weaponIndex: number }): Promise<Knight> {
     const { weaponIndex } = body;
-    const knight = await this.knightService.setEquippedWeapon(knightId, weaponIndex);
-    return this.knightService.update(knightId, knight);
+    return  await this.knightService.setEquippedWeapon(knightId, weaponIndex);
   }
 
   @ApiBody({ required: true })
