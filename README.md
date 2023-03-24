@@ -33,6 +33,11 @@
 # or
 • $ npm install -g @nestjs/cli
 ```
+
+```bash
+# start mongoDB with docker
+$ docker compose up
+```
 ## Installation
 
 ```bash
@@ -40,11 +45,6 @@ $ npm install
 ```
 ## Running the app
 
-
-```bash
-# start mongoDB with docker
-$ docker compose up
-```
 
 ```bash
 # development
