@@ -46,10 +46,16 @@ export class KnightsController {
   @Post('addWeapon/:knightId')
   async addWeapon(@Body() body: { weapon: Weapon }, @Param('knightId') knightId: string): Promise<Knight> {
     const { weapon } = body;
-    console.log(weapon)
     if (!Object.values(weapon).length) return;
     return await this.knightService.addWeapon(knightId, weapon);
   }
+
+  @Post(':id/attack')
+  async attack(@Param('id') knight: string): Promise<{ attack: number }> {
+    const attack = await this.knightService.calculateAttack(knight);
+    return { attack };
+  }
+
 
   @Delete('/removeWeapon/:knightId')
   async removeWeapon(@Param('knightId') knightId: string, @Body() body: { weaponIndex: number }): Promise<Knight> {

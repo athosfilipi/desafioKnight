@@ -54,4 +54,28 @@ export class KnightsService {
     });
     return knight.save();
   }
+
+  async calculateAttack(knightId: string): Promise<number> {
+    const knight = await this.knightModel.findById(knightId).exec();
+    const keyAttrValue = knight.attributes[knight.keyAttribute];
+    let keyAttrMod = 0;
+    if (keyAttrValue <= 8) {
+      keyAttrMod = -2;
+    } else if (keyAttrValue <= 10) {
+      keyAttrMod = -1;
+    } else if (keyAttrValue <= 12) {
+      keyAttrMod = 0;
+    } else if (keyAttrValue <= 15) {
+      keyAttrMod = 1;
+    } else if (keyAttrValue <= 18) {
+      keyAttrMod = 2;
+    } else {
+      keyAttrMod = 3;
+    }
+    const equippedWeapon = knight.weapons.find((weapon) => weapon.equipped);
+    const weaponMod = equippedWeapon ? equippedWeapon.mod : 0;
+    const attack = 10 + keyAttrMod + weaponMod;
+    return attack;
+  }
 }
+
